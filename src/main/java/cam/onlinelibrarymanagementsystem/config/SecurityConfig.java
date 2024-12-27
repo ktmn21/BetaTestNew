@@ -14,6 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -27,31 +31,42 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        reg -> reg.requestMatchers("/login/**", "/register/**")
-                                .permitAll()
-                                .requestMatchers("/admin-only/**").hasAuthority("ADMIN")
-                                .anyRequest()
-                                .authenticated()
-                ).userDetailsService(userDetailsServiceImp)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for stateless APIs
+                .cors() // Enable CORS
+                .and()
+                .authorizeHttpRequests(reg -> reg
+                        .requestMatchers("/login/**", "/register/**").permitAll() // Permit login/register
+                        .requestMatchers("/admin-only/**").hasAuthority("ADMIN") // Protect admin endpoint
+                        .anyRequest().authenticated()) // Authenticate other requests
+                .userDetailsService(userDetailsServiceImp)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless sessions
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT filter
                 .build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(java.util.Arrays.asList("http://localhost:3000")); // Frontend URL
+        config.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE")); // Allowed HTTP methods
+        config.setAllowedHeaders(java.util.Arrays.asList("*")); // Allow all headers
+        config.setAllowCredentials(true); // Allow credentials (cookies, session info)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config); // Apply to all endpoints
+        return new CorsFilter(source);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 }
