@@ -48,7 +48,7 @@ public class UserController {
 
     @GetMapping("/borrowed")
     public List<BorrowedBook> getBorrowedBooks(@AuthenticationPrincipal UserDetails userDetails) {
-        return borrowedBookService.getBorrowedBooksByUser(userService.getUserByUsername(userDetails.getUsername()));
+        return borrowedBookService.getUsersBorrowedBook(userService.getUserByUsername(userDetails.getUsername()));
     }
 
     @GetMapping("/available-books")
