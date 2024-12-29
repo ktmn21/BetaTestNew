@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Long> {
     List<BorrowedBook> findByUser(User user);
+    List<BorrowedBook> findByUserAndReturned(User user, boolean returned);
 }
