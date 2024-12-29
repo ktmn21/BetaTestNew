@@ -37,6 +37,7 @@ public class BorrowedBookService {
     public List<BorrowedBook> getUsersBorrowedBook(User user) {
         // Fetch books where returned = false
         return borrowedBookRepository.findByUserAndReturned(user, false);
+    }
 
     public BorrowedBook borrowBook(Integer userId, Long bookId) {
         User user = userRepository.findById(userId)
