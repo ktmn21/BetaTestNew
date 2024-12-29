@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .cors() // Enable CORS
                 .and()
                 .authorizeHttpRequests(reg -> reg
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/login/**", "/register/**").permitAll() // Permit login/register
                         .requestMatchers("/admin-only/**").hasAuthority("ADMIN") // Protect admin endpoint
                         .anyRequest().authenticated()) // Authenticate other requests
