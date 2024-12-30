@@ -43,25 +43,14 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    // Method to get available books (books that are not borrowed)
+    // Method to get available books (books with stock greater than 0)
     public List<Book> getAvailableBooks() {
         // Get all books in the library
         List<Book> allBooks = bookRepository.findAll();
 
-        // Get borrowed books - filter those that are already borrowed (not returned)
-        List<Long> borrowedBookIds = borrowedBookRepository.findAll()
-                .stream()
-                .filter(borrowedBook -> {
-                    // If the return date is null or after the current date (the book has not been returned or is overdue)
-                    LocalDate returnDate = borrowedBook.getReturnDate();
-                    return returnDate == null || returnDate.isAfter(LocalDate.now());
-                })
-                .map(borrowedBook -> borrowedBook.getBook().getId())
-                .collect(Collectors.toList());
-
-        // Filter out borrowed books from the list of all books
+        // Filter books with stock level greater than 0
         List<Book> availableBooks = allBooks.stream()
-                .filter(book -> !borrowedBookIds.contains(book.getId()))
+                .filter(book -> book.getStock() > 0)
                 .collect(Collectors.toList());
 
         return availableBooks;
