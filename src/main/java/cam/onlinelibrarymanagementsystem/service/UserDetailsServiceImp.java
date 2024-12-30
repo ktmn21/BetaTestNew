@@ -66,4 +66,9 @@ public class UserDetailsServiceImp implements UserDetailsService {
         repository.deleteById(id);
     }
 
+    public Optional<User> getUserByID(Integer id){
+        return repository.findById(id);
+    }
+
+
 }
