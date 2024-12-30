@@ -10,7 +10,7 @@ A web-based Library Management System designed to facilitate borrowing, returnin
 - RESTful API endpoints for user interactions and admin tasks.
 - Manage user profiles, book inventory, and borrowing transactions.
 - Search functionality by title, author, and genre.
-
+- admin logs: username: admin, password: 12345
 ---
 
 ## Swagger Documentation
@@ -22,11 +22,10 @@ Access the complete REST API documentation using Swagger:
 
 ## Tech Stack
 
-### Backend
-- **Java**: Primary language for the application logic.
-- **Spring Boot**: Framework for building REST APIs and microservices.
-- **PostgreSQL**: Relational database for storing data.
-- **JWT**: JSON Web Tokens for authentication.
+- **Spring Boot**: Handles business logic, security, and API creation.
+- **PostgreSQL**: Remote database hosted online on Aiven Cloud for secure and reliable data storage.
+- **Hibernate**: Manages database interactions with JPA.
+- **JWT (JSON Web Tokens)**: Ensures secure authentication and authorization.
 
 ### Deployment
 - **Render**: Platform used for hosting the backend services.
