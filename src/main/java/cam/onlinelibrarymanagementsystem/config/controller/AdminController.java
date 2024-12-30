@@ -82,4 +82,10 @@ public class AdminController {
     public List<BorrowedBook> getOverdueBooks() {
         return borrowedBookService.getOverdueBooks();
     }
+
+    @GetMapping("/get-user-profile/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Optional<User> getUserProfile(@PathVariable Integer userId) {
+        return userService.getUserByID(userId);
+    }
 }
