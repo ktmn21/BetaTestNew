@@ -51,7 +51,7 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(java.util.Arrays.asList("http://localhost:3001")); // Frontend URL
+        config.setAllowedOrigins(java.util.Arrays.asList("https://library-management-five-wine.vercel.app")); // Frontend URL
         config.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE")); // Allowed HTTP methods
         config.setAllowedHeaders(java.util.Arrays.asList("*")); // Allow all headers
         config.setAllowCredentials(true); // Allow credentials (cookies, session info)
