@@ -50,8 +50,9 @@ public class AuthenticationService {
 
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.generateToken(user);
+        String role = user.getRole().name();
 
-        return new AuthenticationResponce(token);
+        return new AuthenticationResponce(token, role);
     }
 
 }
